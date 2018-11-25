@@ -16,7 +16,7 @@ class TimezoneSensor extends AwareSensorCore {
   TimezoneSensor(TimezoneSensorConfig config):this.convenience(config);
   TimezoneSensor.convenience(config) : super(config){
     /// Set sensor method & event channels
-    super.setSensorChannels(_timezoneMethod, _timezoneStream);
+    super.setMethodChannel(_timezoneMethod);
   }
 
 //  /// A sensor observer instance
@@ -25,15 +25,13 @@ class TimezoneSensor extends AwareSensorCore {
 //  }
 
 /// A sensor observer instance
-  Stream<Map<String,dynamic>> get onTimezoneChanged {
-     return _onTimezoneChangedStream.receiveBroadcastStream("on_timezone_changed").map((dynamic event) => Map<String,dynamic>.from(event));
+  Stream<Map<String,dynamic>> onTimezoneChanged(String id) {
+     return super.getBroadcastStream(_onTimezoneChangedStream, "on_timezone_changed", id).map((dynamic event) => Map<String,dynamic>.from(event));
   }
 }
 
 class TimezoneSensorConfig extends AwareSensorConfig{
   TimezoneSensorConfig();
-
-  /// TODO
 
   @override
   Map<String, dynamic> toMap() {
@@ -44,9 +42,10 @@ class TimezoneSensorConfig extends AwareSensorConfig{
 
 /// Make an AwareWidget
 class TimezoneCard extends StatefulWidget {
-  TimezoneCard({Key key, @required this.sensor}) : super(key: key);
+  TimezoneCard({Key key, @required this.sensor, this.cardId}) : super(key: key);
 
   TimezoneSensor sensor;
+  String cardId;
 
   @override
   TimezoneCardState createState() => new TimezoneCardState();
@@ -61,11 +60,11 @@ class TimezoneCardState extends State<TimezoneCard> {
   void initState() {
     super.initState();
     // set observer
-    widget.sensor.onTimezoneChanged.listen((event) {
+    widget.sensor.onTimezoneChanged(widget.cardId).listen((event) {
       setState((){
         if(event!=null){
           DateTime.fromMicrosecondsSinceEpoch(event['timestamp']);
-          _tzInfo = "Current Timezone: ${event.toString()}";
+          _tzInfo = "Current Timezone: ${event["timezoneId"]}";
         }
       });
     }, onError: (dynamic error) {
@@ -85,6 +84,12 @@ class TimezoneCardState extends State<TimezoneCard> {
       title: "Timezone",
       sensor: widget.sensor
     );
+  }
+
+  @override
+  void dispose() {
+    widget.sensor.cancelBroadcastStream(widget.cardId);
+    super.dispose();
   }
 
 }

@@ -31,14 +31,14 @@ public class SwiftAwareframeworkTimezonePlugin: AwareFlutterPluginCore, FlutterP
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SwiftAwareframeworkTimezonePlugin()
-        // add own channel
-        super.setChannels(with: registrar,
-                          instance: instance,
-                          methodChannelName: "awareframework_timezone/method",
-                          eventChannelName: "awareframework_timezone/event")
-
-        let onChangeStreamChannel = FlutterEventChannel.init(name: "awareframework_timezone/event_on_timezone_changed", binaryMessenger: registrar.messenger())
-        onChangeStreamChannel.setStreamHandler(instance)
+    
+        super.setMethodChannel(with: registrar,
+                               instance: instance,
+                               channelName: "awareframework_timezone/method")
+        super.setEventChannels(with: registrar,
+                               instance: instance,
+                               channelNames: ["awareframework_timezone/event",
+                                              "awareframework_timezone/event_on_timezone_changed"])
     }
 
     public func onTimezoneChanged(data: TimezoneData) {

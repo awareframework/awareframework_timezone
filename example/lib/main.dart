@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
 
     sensor = new TimezoneSensor(config);
 
+    sensor.start();
   }
 
   @override
