@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:awareframework_timezone/awareframework_timezone.dart';
-import 'package:awareframework_core/awareframework_core.dart';
 
 void main() => runApp(new MyApp());
 
@@ -24,7 +21,7 @@ class _MyAppState extends State<MyApp> {
     config = TimezoneSensorConfig()
       ..debug = true;
 
-    sensor = new TimezoneSensor(config);
+    sensor = new TimezoneSensor.init(config);
 
     sensor.start();
   }

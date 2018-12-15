@@ -1,6 +1,8 @@
 # Aware Timezone
 
-TODO
+[![Build Status](https://travis-ci.org/awareframework/awareframework_timezone.svg?branch=master)](https://travis-ci.org/awareframework/awareframework_timezone)
+
+The timezone sensor keeps track of the user’s current timezone.
 
 ## Install the plugin into project
 1. Edit `pubspec.yaml`
@@ -19,10 +21,11 @@ import 'package:awareframework_core/awareframework_core.dart';
 ### timezone Sensor
 - `start()`
 - `stop()` 
-- `sync(force: Boolean)`
+- `sync(bool force)`
 - `enable()`
 - `disable()`
 - `isEnable()`
+- `setLabel(String label)`
 
 ### Configuration Keys
 TODO
@@ -50,14 +53,14 @@ var config = TimezoneSensorConfig()
   ..label = "label";
 
 // init sensor
-var sensor = new TimezoneSensor(config);
+var sensor = new TimezoneSensor.init(config);
 
-void mathod(){
+void method(){
     /// start 
     sensor.start();
     
     /// set observer
-    sensor.onDataChanged.listen((Map<String,dynamic> result){
+    sensor.onTimezoneChanged.listen((TimezoneData data){
       setState((){
         // Your code here
       });
